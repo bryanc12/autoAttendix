@@ -56,6 +56,7 @@ def getOtpCode():
             otpCode = obj.data.decode('utf-8')
             if len(otpCode) > 1:
                 return otpCode
+        time.sleep(1)
 
 def signAttendance(otpCode):
     element = 'ion-button'
@@ -89,4 +90,7 @@ def signAttendance(otpCode):
     WebDriverWait(browser, 15).until(EC.presence_of_element_located((By.TAG_NAME, "ion-alert")))
     click_button = browser.find_element(By.CLASS_NAME, "alert-button").click()
 
-main()
+if (username != '') & (password != ''):
+    main()
+else:
+    print('Please fill in your username & password!')
