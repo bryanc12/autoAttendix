@@ -56,8 +56,9 @@ def getOtpCode():
         sorted(ZBarSymbol.__members__.keys())
         for obj in decodedData:
             otpCode = obj.data.decode('utf-8')
-            if len(otpCode) > 1:
-                return otpCode
+            if otpCode.isdecimal():
+                if (len(otpCode) > 0) and (len(otpCode) < 4):
+                    return otpCode
         time.sleep(1)
 
 def signAttendance(otpCode):
