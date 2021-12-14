@@ -1,3 +1,4 @@
+import gc
 import time
 from datetime import datetime
 
@@ -59,6 +60,7 @@ def getOtpCode():
             if otpCode.isdecimal():
                 if (len(otpCode) > 0) and (len(otpCode) < 4):
                     return otpCode
+        gc.collect()
         time.sleep(1)
 
 def signAttendance(otpCode):
