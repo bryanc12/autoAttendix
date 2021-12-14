@@ -1,14 +1,16 @@
-from PIL import ImageGrab
-from pyzbar.pyzbar import ZBarSymbol
+import time
 from datetime import datetime
-from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
+
+import cv2
 import numpy as np
 import pyzbar.pyzbar as pyzbar
-import cv2, time
+from PIL import ImageGrab
+from pyzbar.pyzbar import ZBarSymbol
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 username =  ''
 password = ''
@@ -90,7 +92,7 @@ def signAttendance(otpCode):
     WebDriverWait(browser, 15).until(EC.presence_of_element_located((By.TAG_NAME, "ion-alert")))
     click_button = browser.find_element(By.CLASS_NAME, "alert-button").click()
 
-if (username != '') & (password != ''):
+if (username != '') and (password != ''):
     main()
 else:
     print('Please fill in your username & password!')
