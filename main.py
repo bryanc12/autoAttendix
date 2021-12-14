@@ -34,10 +34,13 @@ def main():
             lastSignGap = time.time() - lastSignTime
             if lastSignGap >  300.0:
                 signAttendance(otpCode)
+                lastOtpCode = otpCode
                 lastSignTime = time.time()
+            time.sleep(5)
         if lastOtpCode != otpCode:
             print(dateTime + ' OTP CODE FOUND -> ' + otpCode)
             signAttendance(otpCode)
+            lastOtpCode = otpCode
             lastSignTime = time.time()
             print('Done Signing Attendance\n')
 
