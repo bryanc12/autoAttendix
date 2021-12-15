@@ -20,7 +20,7 @@ apspaceAttendix = 'https://apspace.apu.edu.my/attendix/update'
 
 def main():
     username, password = getCredentials()
-    if (username == '') and (password == ''):
+    if (username == '') or (password == ''):
         print('Please fill in your username & password!')
 
     print('Start Tracking Attendance...\n')
