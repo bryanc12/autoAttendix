@@ -1,4 +1,5 @@
 import gc
+import json
 import time
 from datetime import datetime
 
@@ -13,40 +14,45 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-username =  ''
-password = ''
-
 apspaceLink = 'https://apspace.apu.edu.my/'
 apspaceDashboard = 'https://apspace.apu.edu.my/tabs/dashboard'
 apspaceAttendix = 'https://apspace.apu.edu.my/attendix/update'
 
 def main():
+    username, password = getCredentials()
+    if (username == '') and (password == ''):
+        print('Please fill in your username & password!')
+
     print('Start Tracking Attendance...\n')
     lastSignTime = time.time()
     lastOtpCode = None
+
     while True:
         otpCode = getOtpCode()
         dateTime = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
         if lastOtpCode is None:
             print(dateTime + ' OTP CODE FOUND -> ' + otpCode)
-            signAttendance(otpCode)
+            signAttendance(otpCode, username, password)
             lastOtpCode = otpCode
             lastSignTime = time.time()
             print('Done Signing Attendance\n')
         if lastOtpCode == otpCode:
             lastSignGap = time.time() - lastSignTime
             if lastSignGap >  300.0:
-                signAttendance(otpCode)
+                signAttendance(otpCode, username, password)
                 lastOtpCode = otpCode
                 lastSignTime = time.time()
             time.sleep(5)
         if lastOtpCode != otpCode:
             print(dateTime + ' OTP CODE FOUND -> ' + otpCode)
-            signAttendance(otpCode)
+            signAttendance(otpCode, username, password)
             lastOtpCode = otpCode
             lastSignTime = time.time()
             print('Done Signing Attendance\n')
 
+def getCredentials():
+    data = json.loads(open('.\credentials.json', 'r').read())
+    return(data['username'], data['password'])
 
 def getOtpCode():
     while True:
@@ -63,7 +69,7 @@ def getOtpCode():
         gc.collect()
         time.sleep(1)
 
-def signAttendance(otpCode):
+def signAttendance(otpCode, username, password):
     element = 'ion-button'
     options = webdriver.ChromeOptions() 
     options.add_experimental_option("excludeSwitches", ["enable-logging"])
@@ -93,7 +99,4 @@ def signAttendance(otpCode):
     time.sleep(1)
     browser.find_element(By.CLASS_NAME, "alert-button").click()
 
-if (username != '') and (password != ''):
-    main()
-else:
-    print('Please fill in your username & password!')
+main()
