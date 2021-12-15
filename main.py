@@ -67,24 +67,21 @@ def signAttendance(otpCode):
     element = 'ion-button'
     options = webdriver.ChromeOptions() 
     options.add_experimental_option("excludeSwitches", ["enable-logging"])
-    s = Service('./chromedriver.exe')
-    browser = webdriver.Chrome(service=s, options=options)
+    service = Service('./chromedriver.exe')
+    browser = webdriver.Chrome(service=service, options=options)
     browser.get(apspaceLink)
     browser.implicitly_wait(10)
 
     get_ion_button = browser.find_elements(By.TAG_NAME, element)
     get_ion_button[1].click()
 
-    get_apkey = browser.find_elements(By.NAME, "apkey")
-    get_password = browser.find_elements(By.NAME, "password")
-    get_apkey[1].send_keys(username)
-    get_password[1].send_keys(password)
+    browser.find_elements(By.NAME, "apkey")[1].send_keys(username)
+    browser.find_elements(By.NAME, "password")[1].send_keys(password)
     get_ion_button[2].click()
 
     WebDriverWait(browser, 15).until(EC.url_to_be(apspaceDashboard))
     time.sleep(1)
-    get_all_button = browser.find_elements(By.TAG_NAME, element)
-    get_all_button[3].click()
+    browser.find_elements(By.TAG_NAME, element)[3].click()
 
     WebDriverWait(browser, 15).until(EC.url_to_be(apspaceAttendix))
     get_input = browser.find_elements(By.TAG_NAME, "input")
@@ -93,7 +90,8 @@ def signAttendance(otpCode):
         get_input[i+1].send_keys(otpCode[i])
 
     WebDriverWait(browser, 15).until(EC.presence_of_element_located((By.TAG_NAME, "ion-alert")))
-    click_button = browser.find_element(By.CLASS_NAME, "alert-button").click()
+    time.sleep(1)
+    browser.find_element(By.CLASS_NAME, "alert-button").click()
 
 if (username != '') and (password != ''):
     main()
