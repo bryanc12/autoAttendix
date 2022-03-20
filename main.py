@@ -70,7 +70,6 @@ def getOtpCode():
         time.sleep(1)
 
 def signAttendance(otpCode, username, password):
-    element = 'ion-button'
     options = webdriver.ChromeOptions() 
     options.add_experimental_option("excludeSwitches", ["enable-logging"])
     service = Service('./chromedriver.exe')
@@ -78,7 +77,7 @@ def signAttendance(otpCode, username, password):
     browser.get(apspaceLink)
     browser.implicitly_wait(10)
 
-    get_ion_button = browser.find_elements(By.TAG_NAME, element)
+    get_ion_button = browser.find_elements(By.TAG_NAME, "ion-button")
     get_ion_button[1].click()
 
     browser.find_elements(By.NAME, "apkey")[1].send_keys(username)
@@ -87,7 +86,7 @@ def signAttendance(otpCode, username, password):
 
     WebDriverWait(browser, 15).until(EC.url_to_be(apspaceDashboard))
     time.sleep(1)
-    browser.find_elements(By.TAG_NAME, element)[3].click()
+    browser.find_element(By.CLASS_NAME, "quick-access-attendance").click()
 
     WebDriverWait(browser, 15).until(EC.url_to_be(apspaceAttendix))
     get_input = browser.find_elements(By.TAG_NAME, "input")
