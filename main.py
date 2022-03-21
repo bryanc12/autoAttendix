@@ -49,6 +49,7 @@ def main():
             lastOtpCode = otpCode
             lastSignTime = time.time()
             print('Done Signing Attendance\n')
+        gc.collect()
 
 def getCredentials():
     data = json.loads(open('.\credentials.json', 'r').read())
