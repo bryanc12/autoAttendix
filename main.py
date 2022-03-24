@@ -20,7 +20,7 @@ apspaceAttendix = 'https://apspace.apu.edu.my/attendix/update'
 
 def main():
     username, password = getCredentials()
-    if (username == '') or (password == ''):
+    if (username == '') and (password == ''):
         print('Please fill in your username & password!')
 
     print('Start Tracking Attendance...\n')
@@ -35,10 +35,10 @@ def main():
             signAttendance(otpCode, username, password)
             lastOtpCode = otpCode
             lastSignTime = time.time()
-            print('Done Signing Attendance\n')
         if lastOtpCode == otpCode:
             lastSignGap = time.time() - lastSignTime
             if lastSignGap >  300.0:
+                print(dateTime + ' OTP CODE FOUND -> ' + otpCode)
                 signAttendance(otpCode, username, password)
                 lastOtpCode = otpCode
                 lastSignTime = time.time()
@@ -48,7 +48,6 @@ def main():
             signAttendance(otpCode, username, password)
             lastOtpCode = otpCode
             lastSignTime = time.time()
-            print('Done Signing Attendance\n')
         gc.collect()
 
 def getCredentials():
@@ -60,7 +59,7 @@ def getOtpCode():
         try:
             img = ImageGrab.grab()
         except OSError:
-            print('Screen capture permission denied, possibly screen locked.\n')
+            print('Screen capture permission denied by Operating System, error handled and solved.\n')
         imgNp = np.array(img)
         frame = cv2.cvtColor(imgNp, cv2.COLOR_BGR2GRAY)
         decodedData = pyzbar.decode(frame, symbols=[ZBarSymbol.QRCODE])
@@ -100,6 +99,8 @@ def signAttendance(otpCode, username, password):
 
     WebDriverWait(browser, 15).until(EC.presence_of_element_located((By.TAG_NAME, "ion-alert")))
     time.sleep(1)
+
+    print(browser.find_element(By.CLASS_NAME, "alert-message").get_attribute("innerHTML") + '\n')
     browser.find_element(By.CLASS_NAME, "alert-button").click()
 
 main()
