@@ -20,8 +20,9 @@ apspaceAttendix = 'https://apspace.apu.edu.my/attendix/update'
 
 def main():
     username, password = getCredentials()
-    if (username == '') and (password == ''):
+    if (username == '') or (password == ''):
         print('Please fill in your username & password!')
+        exit()
 
     print('Start Tracking Attendance...\n')
     lastSignTime = time.time()
@@ -29,22 +30,22 @@ def main():
 
     while True:
         otpCode = getOtpCode()
-        dateTime = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+        
         if lastOtpCode is None:
-            print(dateTime + ' OTP CODE FOUND -> ' + otpCode)
+            otpFound(otpCode)
             signAttendance(otpCode, username, password)
             lastOtpCode = otpCode
             lastSignTime = time.time()
         if lastOtpCode == otpCode:
             lastSignGap = time.time() - lastSignTime
             if lastSignGap >  300.0:
-                print(dateTime + ' OTP CODE FOUND -> ' + otpCode)
+                otpFound(otpCode)
                 signAttendance(otpCode, username, password)
                 lastOtpCode = otpCode
                 lastSignTime = time.time()
             time.sleep(5)
         if lastOtpCode != otpCode:
-            print(dateTime + ' OTP CODE FOUND -> ' + otpCode)
+            otpFound(otpCode)
             signAttendance(otpCode, username, password)
             lastOtpCode = otpCode
             lastSignTime = time.time()
@@ -71,6 +72,12 @@ def getOtpCode():
                     return otpCode
         gc.collect()
         time.sleep(1)
+
+def otpFound(otpCode):
+    dateTime = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+    otpFound = (dateTime + ' OTP CODE FOUND -> ' + otpCode)
+    print(otpFound)
+    log((otpFound + '\n'))
 
 def signAttendance(otpCode, username, password):
     options = webdriver.ChromeOptions() 
@@ -100,7 +107,13 @@ def signAttendance(otpCode, username, password):
     WebDriverWait(browser, 15).until(EC.presence_of_element_located((By.TAG_NAME, "ion-alert")))
     time.sleep(1)
 
-    print(browser.find_element(By.CLASS_NAME, "alert-message").get_attribute("innerHTML") + '\n')
+    alertMessage = browser.find_element(By.CLASS_NAME, "alert-message").get_attribute("innerHTML") + '\n'
+    print(alertMessage)
+    log((alertMessage + '\n\n'))
     browser.find_element(By.CLASS_NAME, "alert-button").click()
+
+def log(msg):
+    logFile = open("latest.log", "a")
+    logFile.write(msg)
 
 main()
