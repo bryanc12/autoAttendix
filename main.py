@@ -57,7 +57,10 @@ def getCredentials():
 
 def getOtpCode():
     while True:
-        img = ImageGrab.grab()
+        try:
+            img = ImageGrab.grab()
+        except OSError:
+            print('Screen capture permission denied, possibly screen locked.\n')
         imgNp = np.array(img)
         frame = cv2.cvtColor(imgNp, cv2.COLOR_BGR2GRAY)
         decodedData = pyzbar.decode(frame, symbols=[ZBarSymbol.QRCODE])
