@@ -1,5 +1,5 @@
 # autoAttendix (DEPRECATED)
-This project is replaced by [autoAttendix2](https://github.com/bryanc12/autoAttendix2).
+This project is deprecated by [autoAttendix2](https://github.com/bryanc12/autoAttendix2).
 
 ## Requirements
 1. Python 3.10
